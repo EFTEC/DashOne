@@ -1,0 +1,39 @@
+{
+  "name": "eftec/dashone",
+  "description": "A fast UI Dashboard generator for PHP",
+  "type": "library",
+  "keywords": ["blade","template","view","php","templating"],
+  "homepage": "https://github.com/EFTEC/DashOne",
+  "license": "LGPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Jorge Patricio Castro Castillo",
+      "email": "jcastro@eftec.cl"
+    }],
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "5.6.1"
+    }
+  },
+  "require": {
+    "php": ">=5.6",
+    "ext-json": "*"
+  },
+  "archive": {
+    "exclude": ["/examples"]
+  },
+  "autoload": {
+    "psr-4": {
+      "eftec\\DashOne\\": "lib/",
+      "eftec\\tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
+  }
+}

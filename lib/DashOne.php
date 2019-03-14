@@ -15,11 +15,11 @@ use Exception;
  * @package eftec\DashOne
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 0.1 2019-mar-14 4:59 PM
+ * @version 1.0 2019-mar-14 4:59 PM
  * @link https://github.com/EFTEC/DashOne
  */
 class DashOne {
-	const VERSION=0.1;
+	const VERSION=1.0;
 	
 	var $companyName='';
 	var $links=[];
@@ -32,7 +32,10 @@ class DashOne {
 	}
 
 	public function css() {
-		return "body{font-size:.875rem}.bd-placeholder-img{font-size:1.125rem;text-anchor:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}@media (min-width: 768px){.bd-placeholder-img-lg{font-size:3.5rem}}.form-control-dark{color:#fff;background-color:rgba(255,255,255,.1);border-color:rgba(255,255,255,.1)}.form-control-dark:focus{border-color:transparent;box-shadow:0 0 0 3px rgba(255,255,255,.25)}.feather{width:16px;height:16px;vertical-align:text-bottom}.leftmenu{position:fixed;top:0;bottom:0;left:0;z-index:100;padding:48px 0 0;box-shadow:inset -1px 0 0 rgba(0,0,0,.1)}.leftmenu-sticky{position:relative;top:0;height:calc(100vh - 48px);padding-top:.5rem;overflow-x:hidden;overflow-y:auto}.leftmenu .nav-link{font-weight:500;color:#333}.leftmenu .nav-link .feather{margin-right:4px;color:#999}.leftmenu .nav-link.active{color:#007bff}.leftmenu .nav-link:hover .feather,.leftmenu .nav-link.active .feather{color:inherit}.leftmenu-heading{font-size:.75rem;text-transform:uppercase}[role=\"main\"]{padding-top:133px}@media (min-width: 768px){[role=\"main\"]{padding-top:48px}}.navbar-brand{padding-top:.75rem;padding-bottom:.75rem;font-size:1rem;background-color:rgba(0,0,0,.25);box-shadow:inset -1px 0 0 rgba(0,0,0,.25)}.navbar .form-control{padding:.75rem 1rem;border-width:0;border-radius:0}";
+		return "body{font-size:.875rem}.bd-placeholder-img{font-size:1.125rem;text-anchor:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}@media (min-width: 768px){.bd-placeholder-img-lg{font-size:3.5rem}}.form-control-dark{color:#fff;background-color:rgba(255,255,255,.1);border-color:rgba(255,255,255,.1)}.form-control-dark:focus{border-color:transparent;
+		box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+		.far{width:16px;height:16px;vertical-align:text-bottom}
+		.leftmenu{position:fixed;top:0;bottom:0;left:0;z-index:100;padding:48px 0 0;box-shadow:inset -1px 0 0 rgba(0,0,0,.1)}.leftmenu-sticky{position:relative;top:0;height:calc(100vh - 48px);padding-top:.5rem;overflow-x:hidden;overflow-y:auto}.leftmenu .nav-link{font-weight:500;color:#333}.leftmenu .nav-link .far{margin-right:4px;color:#999}.leftmenu .nav-link.active{color:#007bff}.leftmenu .nav-link:hover .far,.leftmenu .nav-link.active .far{color:inherit}.leftmenu-heading{font-size:.75rem;text-transform:uppercase}[role=\"main\"]{padding-top:133px}@media (min-width: 768px){[role=\"main\"]{padding-top:48px}}.navbar-brand{padding-top:.75rem;padding-bottom:.75rem;font-size:1rem;background-color:rgba(0,0,0,.25);box-shadow:inset -1px 0 0 rgba(0,0,0,.25)}.navbar .form-control{padding:.75rem 1rem;border-width:0;border-radius:0}";
 	}
 	
 	public function head($title='DashOne',$extraHtml='') {
@@ -46,7 +49,8 @@ class DashOne {
     <meta name="description" content="">
     <meta name="author" content="DashOne">
     <title>$title</title>    
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">   
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <style>$css</style>    
     $extraHtml
 </head>
@@ -56,24 +60,12 @@ inout;
 	} // head
 	
 	public function footer($extraHtml='') {
-		$cin=<<<inout
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-
-$extraHtml
-<script>
-	(function () {
-	    'use strict';
-	    feather.replace()
-	}());
-</script>
-</body>
+		$cin= "<script src=\"https://code.jquery.com/jquery-3.3.1.slim.min.js\" integrity=\"sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo\" crossorigin=\"anonymous\"></script>
+<script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js\" integrity=\"sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1\" crossorigin=\"anonymous\"></script>
+<script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js\" integrity=\"sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM\" crossorigin=\"anonymous\"></script>
+$extraHtml</body>
 </html>
-
-inout;
+";
 		$this->html[]=$cin;
 		return $this;
 	} //footer
@@ -219,19 +211,30 @@ inout;
 		$this->html[$last]->setId($id);
 		return $this;
 	}
-	public function render() {
+
+	/**
+	 * Render the dashboard
+	 * @param bool $return
+	 * @return string|null
+	 */
+	public function render($return=false) {
+
 		$co=count($this->html);
 		$html="";
 		for($i=0;$i<$co;$i++) {
 			$html.=$this->renderItem($i);
 		}
-		return $html;
+		if ($return) {
+			return $html;
+		} else {
+			echo $html;
+			return null;
+		}
 	}
 
 	/**
 	 * @param int|array $idHtml If int then it returns the item loaded on $this->html
 	 * @return array|mixed|string
-	 * @throws Exception
 	 */
 	public function renderItem(&$idHtml) {
 		if (is_numeric($idHtml)) {
@@ -283,23 +286,11 @@ inout;
 					return  $item->render($this->renderItem($idHtml));
 					break;
 				default:
-					throw new Exception("class $defType not defined");
+					die("class $defType not defined");
 			}
 		} else {
 			return $item;
 		}
 	}
-	private function renderContainer($item,$subobject) {
-		$html=$item['value'];
-		$html=str_replace('%control',$subobject,$html);
-		return $html;
-	}
-
-
-
-
-
-
 	
-
-}
+} // end class DashOne

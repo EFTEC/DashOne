@@ -19,7 +19,7 @@ class LinkOne extends ControlOne
 	 * LinkOne constructor.
 	 * @param $name
 	 * @param $url
-	 * @param $icon
+	 * @param string $icon Font-awesome icons. Example: far fa-star
 	 */
 	public function __construct($name, $url='#', $icon='')
 	{
@@ -29,7 +29,7 @@ class LinkOne extends ControlOne
 	}
 	public function render() {
 		$html="<a class='{$this->class}' href='{$this->url}'>";
-		$html.=($this->icon)?"<span data-feather='{$this->icon}'></span>":"";
+		$html.=($this->icon)?"<i class='{$this->icon}'></i> ":"";
 		$html.="{$this->name}</a>";
 		return $html;
 	}
