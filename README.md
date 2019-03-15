@@ -11,6 +11,11 @@ A minimalist dashboard /backend library  for PHP
 [![php](https://img.shields.io/badge/php-7.x-green.svg)]()
 [![CocoaPods](https://img.shields.io/badge/docs-70%25-yellow.svg)]()
 
+With this library, it is possible to create a fast dashboard (backend) without need to edit html or use a template.  
+
+
+
+
 Example:
 
 ![doc/screenshot1.jpg](doc/screenshot1.jpg)
@@ -70,3 +75,90 @@ $values=
 
 $dash->table($values)->...  // it must be called after the render
 ```    
+
+![doc/screenshottable.jpg](doc/screenshottable.jpg)
+
+
+### Drawing a form
+
+You could draw a form using an associative array. By default, every field will be a textbox
+
+```php
+$currentValue=['IdProduct'=>"2"
+	,'Name'=>"aaa"
+	,'Price'=>"333"
+	,'Type'=>1
+	,'Description'=>''];
+
+$dash->form($currentValue)
+``` 
+
+![doc/screenshotform0.jpg](doc/screenshotform0.jpg)
+
+Or you could explicit the type of field
+
+```php
+$definition=['IdProduct'=>'hidden'
+	,'Name'=>'text'
+	,'Price'=>'text'
+	,'Type'=>['cocacola','fanta','sprite']
+	,'Description'=>'textarea'];
+$currentValue=['IdProduct'=>"2"
+	,'Name'=>"aaa"
+	,'Price'=>"333"
+	,'Type'=>1
+	,'Description'=>''];
+
+$dash->form($currentValue,$definition)
+``` 
+
+![doc/screenshotform.jpg](doc/screenshotform.jpg)
+
+### Drawing a list (unsorted list)
+
+```php
+$valueUL=['Cocacola','Fanta','Sprite'];
+
+$dash->ul($valueUL)
+```
+
+![doc/screenshotul.jpg](doc/screenshotul.jpg)
+
+### Drawing buttons
+
+```php
+
+$buttons=[
+	new ButtonOne('button1','Click me','btn btn-primary'),
+	new ButtonOne('button2','Click me too','btn btn-danger')
+];
+
+
+$dash->buttons($buttons,false) // where if true then buttons are aligned with the form
+
+```
+
+> $dash->buttons($buttons,true) 
+
+![doc/screenshotbutton1.jpg](doc/screenshotbutton1.jpg)
+
+> $dash->buttons($buttons,false)
+
+![doc/screenshotbutton2.jpg](doc/screenshotbutton2.jpg)
+
+## Copyright
+
+Copyright Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
+Dual License (LGPL v3 and Commercial License)  
+
+You could use in commercial / close source product or service while  
+
+In a nutshell (it is the license): 
+
+* You must keep the copyright notices.  
+* If you modify the library then you must share the changes and modifications.
+
+   
+
+
+

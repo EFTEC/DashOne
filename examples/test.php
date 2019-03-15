@@ -21,8 +21,16 @@ $values=
 		['IdProduct'=>3,'Name'=>'Sprite','Price'=>"11.5"],
 	];
 
-$definition=['IdProduct'=>'hidden','Name'=>'text','Price'=>'text','Type'=>['cocacola','fanta','sprite'],'Description'=>'textarea'];
-$currentValue=['IdProduct'=>"2",'Name'=>"aaa",'Price'=>"333",'Type'=>1,'Description'=>''];
+$definition=['IdProduct'=>'hidden'
+	,'Name'=>'text'
+	,'Price'=>'text'
+	,'Type'=>['cocacola','fanta','sprite']
+	,'Description'=>'textarea'];
+$currentValue=['IdProduct'=>"2"
+	,'Name'=>"aaa"
+	,'Price'=>"333"
+	,'Type'=>1
+	,'Description'=>''];
 
 $buttons=[
 	new ButtonOne('button1','Click me','btn btn-primary'),
@@ -48,9 +56,9 @@ $dash
 			->table($values)->setClass('table table-stripped')->setId('table1')
 			->title('Form')
 			->rawHtml('<br>')
-			->form($currentValue,$definition)
-			->container("<div class='form-group row'><div class='col-sm-10 offset-sm-2'>%control</div></div>")
-				->buttons($buttons)
+			->form($currentValue)
+			->buttons($buttons,false)
+			->rawHtml('<br><br>')
 			->ul($valueUL)
 			->rawHtml("<br><br>")
 			->alert('title','subtitle')
