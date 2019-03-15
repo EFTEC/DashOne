@@ -32,9 +32,9 @@ class UlOne extends ControlOne
 	 * @throws \Exception
 	 */
 	public function render($caller=null) {
-		$html="<ul class='".$this->class."'>";
+		$html="<ul class='{$this->class}'>{$this->extra}";
 		foreach($this->values as $line) {
-			$html.="<li class='list-group-item'>".$caller->renderItem($line)."</li>\n";
+			$html.="<li class='{$this->subclass}'>".$caller->renderItem($line)."</li>\n";
 		}
 		$html.="</ul>";
 		return $html;

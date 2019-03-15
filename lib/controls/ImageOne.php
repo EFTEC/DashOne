@@ -28,7 +28,7 @@ class ImageOne extends ControlOne
 	}
 	
 	public function render() {
-		return "<img src='{$this->url}' alt='{$this->title}' class='{$this->class}'/>";
+		return "<img src='{$this->url}' alt='{$this->title}' class='{$this->class} {$this->extra}'/>";
 	}
 
 }

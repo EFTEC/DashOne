@@ -16,13 +16,23 @@ use eftec\DashOne\DashOne;
 class TableOne extends ControlOne
 {
 	var $values;
+	var $definition;
 
 	/**
 	 * TableOne constructor.
 	 * @param $values
 	 */
-	public function __construct($values=[])
+	public function __construct($values=[],$definition=null)
 	{
+		if ($definition==null) {
+
+			$definition=array_keys($values[0]);
+			/*
+			foreach($definition as &$v) {
+			}
+			*/
+		}
+		$this->definition=$definition;
 		$this->values = $values;
 	}
 
@@ -33,19 +43,20 @@ class TableOne extends ControlOne
 	 * @throws \Exception
 	 */
 	public function render($caller=null) {
+		if (!$this->values && $this->definition) return "";
 		
-		$valuesKeys=array_keys($this->values[0]);
 
-		$html="<table class='".$this->class."'>";
+		$html="<table class='".$this->class."'>{$this->extra}";
 		$html.="<thead><tr>\n";
-		foreach($valuesKeys as $k) {
+		foreach($this->definition as $k) {
 			$html.="<th>$k</th>\n";
 		}
 		$html.="</tr></thead>\n";
 		$html.="<tbody>\n";
 		foreach($this->values as $line) {
-			$html.="<tr>\n";
-			foreach($line as $cell) {
+			$html.="<tr class='{$this->subclass}'>\n";
+			foreach($this->definition as $key) {
+				$cell=@$line[$key];
 				if (is_object($cell) || is_array($cell)) {
 					if ($caller===null) {
 						$html .= "<td>-array-</td>\n";

@@ -31,7 +31,7 @@ $links=[
 ];
 
 $dash=new DashOne();
-$dash->companyName="Cocacola";
+
 $dash->head('Example');
 $dash->menuUpper();
 $dash

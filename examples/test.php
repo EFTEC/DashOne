@@ -36,7 +36,7 @@ $links=[
 ];
 
 $dash=new DashOne();
-$dash->companyName="Cocacola";
+
 $dash->head('Example - test 1');
 $dash->menuUpper([new ImageOne('https://via.placeholder.com/32x32')," - ",new LinkOne('Cocacola','#')]);
 $dash
@@ -53,6 +53,7 @@ $dash
 				->buttons($buttons)
 			->ul($valueUL)
 			->rawHtml("<br><br>")
+			->alert('title','subtitle')
 		->endmain()
 	->endcontent();
 $dash->footer();

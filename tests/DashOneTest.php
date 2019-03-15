@@ -41,7 +41,7 @@ class DashOneTest extends Bootstrap
 	{
 		$this->dash=new DashOne();
 		$idx=0;
-		$this->assertEqualsStrip('<table class=\' table\'><thead><tr><th>a1</th><th>a2</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr></tbody></table>'
+		$this->assertEqualsStrip('<table class=\'table\'><thead><tr><th>a1</th><th>a2</th></tr></thead><tbody><tr class=\'\'><td>1</td><td>2</td></tr></tbody></table>'
 				,trim($this->dash->table([['a1'=>'1','a2'=>'2']])->renderItem($idx)));
 	}
 

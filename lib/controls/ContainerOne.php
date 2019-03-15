@@ -19,16 +19,24 @@ class ContainerOne extends ControlOne
 	
 	/**
 	 * ContainerOne constructor.
-	 * @param $html
+	 * @param string $html It could contain %control (inner control if any) and %extra (extra value if any).
 	 */
 	public function __construct($html)
 	{
 		$this->html = $html;
 	}
 
-
+	/**
+	 * Example:
+	 *      new ContainerOne('<hr>%control %extra<hr>')
+	 *      ->render('<b>inner object</b>')
+	 * @param $subobject
+	 * @param null $caller
+	 * @return mixed
+	 */
 	public function render($subobject,$caller=null) {
 		$html=str_replace('%control',$subobject,$this->html);
+		$html=str_replace('%extra',$this->extra,$html);
 		return $html;
 	}
 
