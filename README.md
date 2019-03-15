@@ -34,7 +34,11 @@ Install via composer
 
 ### A basic page :
 
-Any pages requires at least to call the head() and footer().  Render() draws the end page
+Any pages requires at least to call the head(), footer() and Render().
+
+Render() draws the page so it must be called at the end of the chain.
+
+
 
 ```php
 $dash=new DashOne();
