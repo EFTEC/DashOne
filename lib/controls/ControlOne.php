@@ -7,7 +7,7 @@ namespace eftec\DashOne\controls;
  * @package eftec\DashOne\controls
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 0.1 2019-mar-14 4:59 PM
+ * @version 1.1 2019-mar-14 4:59 PM
  * @link https://github.com/EFTEC/DashOne
  */
 abstract class ControlOne
