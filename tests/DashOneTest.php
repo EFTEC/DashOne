@@ -27,7 +27,8 @@ class DashOneTest extends Bootstrap
 		$this->dash=new DashOne();
 		$idx=0;
 		$this->assertEquals('<main role="main" class="col-md-12 ml-sm-auto col-lg-12 px-4">
-<form method=\'post\'>',trim($this->dash->startMain()->renderItem($idx)));
+<form method=\'post\'>
+<input type=\'hidden\' name=\'_ispostback\' value=\'1\'/>',trim($this->dash->startMain()->renderItem($idx)));
 	}
 
 	public function testMenu()
@@ -53,76 +54,24 @@ class DashOneTest extends Bootstrap
 
 	public function testContainer()
 	{
+		$this->dash=new DashOne();
 
+		$this->assertEquals('INIT hi
+ END',trim($this->dash->container('INIT %control END')->rawHtml("hi")->render(true)));
 	}
 
 	public function testMenuUpper()
 	{
+		$this->dash=new DashOne();
 
+		$this->assertEquals('<body>
+		<nav class=\'navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow\'>
+		    <span class=\'navbar-brand col-sm-3 col-md-2 mr-0\'></span><ul class=\'navbar-nav px-3\'>
+		        <li class=\'nav-item text-nowrap\'>
+		            <span class=\'nav-link\' href=\'#\'></span>
+		        </li>
+		    </ul>
+		</nav>',trim($this->dash->menuUpper([],[])->render(true)));
 	}
 
-	public function testUl()
-	{
-
-	}
-
-	public function testImage()
-	{
-
-	}
-
-	public function testStartContent()
-	{
-
-	}
-
-	public function testEndMain()
-	{
-
-	}
-
-	public function testForm()
-	{
-
-	}
-
-	public function testButtons()
-	{
-
-	}
-
-	public function testGenNode()
-	{
-
-	}
-
-	public function testCss()
-	{
-
-	}
-
-	public function testHead()
-	{
-
-	}
-
-	public function testEndContent()
-	{
-
-	}
-
-	public function testSetClass()
-	{
-
-	}
-
-	public function testTitle()
-	{
-
-	}
-
-	public function testSetId()
-	{
-
-	}
 }
