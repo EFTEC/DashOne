@@ -37,7 +37,7 @@ abstract class ControlOne
 	public function setId($name) {
 		$this->name=$name;
 		return $this;
-	}	
+	}
 	public function setExtra($extra) {
 		$this->extra=$extra;
 		return $this;

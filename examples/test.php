@@ -21,6 +21,12 @@ $values=
 		['IdProduct'=>3,'Name'=>'Sprite','Price'=>"11.5"],
 	];
 
+$definitionsTable=['IdProduct'=>'Id. of the Product'
+	,'Name'=>'Name'
+	,'Price'=>'Price in USD'
+	,'Buttons'=>'Edit'];
+
+
 $definition=['IdProduct'=>'hidden'
 	,'Name'=>'text'
 	,'Price'=>'text'
@@ -53,10 +59,15 @@ $dash
 		->startmain()
 			->title('Table of Products')
 			->rawHtml('<br>')
-			->table($values)->setClass('table table-stripped')->setId('table1')
+			->table($values,$definitionsTable)->setClass('table table-stripped')->setId('table1')
 			->title('Form')
 			->rawHtml('<br>')
 			->form($currentValue)
+			->rawHtml('<br>')
+			->rawHtml('<br>')
+			->link("Go to google","https://www.google.com","far fa-star")
+			->rawHtml('<br>')
+			->rawHtml('<br>')
 			->buttons($buttons,false)
 			->rawHtml('<br><br>')
 			->ul($valueUL)

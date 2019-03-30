@@ -16,31 +16,29 @@ use Exception;
  * @package eftec\DashOne
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.1 2019-mar-14 4:59 PM
+ * @version 1.2 2019-mar-30 4:59 PM
  * @link https://github.com/EFTEC/DashOne
  */
 class DashOne {
-	const VERSION=1.0;
+	const VERSION=1.2;
 
-	var $links=[];
-	
-	var $html=[];
+	private $html=[];
 	var $hasSideMenu=false;
-	var $hasPost=false;
+	private $hasPost=false;
 	/** @var bool true if we want to check csrf */
 	var $csrf=false;
-	
-	public static function genNode($type='',$value=null,$class='',$id='',$messages=null) {
+
+	private static function genNode($type='',$value=null,$class='',$id='',$messages=null) {
 		return ['_def'=>$type,"value"=>$value,"class"=>$class,"id"=>$id,"messages"=>$messages];
 	}
 
-	public function css() {
+	private function css() {
 		return "body{font-size:.875rem}.bd-placeholder-img{font-size:1.125rem;text-anchor:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}@media (min-width: 768px){.bd-placeholder-img-lg{font-size:3.5rem}}.form-control-dark{color:#fff;background-color:rgba(255,255,255,.1);border-color:rgba(255,255,255,.1)}.form-control-dark:focus{border-color:transparent;
 		box-shadow:0 0 0 3px rgba(255,255,255,.25)}
 		.far,.fas{width:16px;height:16px;vertical-align:text-bottom}
 		.leftmenu{position:fixed;top:0;bottom:0;left:0;z-index:100;padding:48px 0 0;box-shadow:inset -1px 0 0 rgba(0,0,0,.1)}.leftmenu-sticky{position:relative;top:0;height:calc(100vh - 48px);padding-top:.5rem;overflow-x:hidden;overflow-y:auto}.leftmenu .nav-link{font-weight:500;color:#333}.leftmenu .nav-link .far,.leftmenu .nav-link .fas{margin-right:4px;color:#999}.leftmenu .nav-link.active{color:#007bff}.leftmenu .nav-link:hover .far,.leftmenu .nav-link:hover .fas,.leftmenu .nav-link.active .far,.leftmenu .nav-link.active .fas{color:inherit}.leftmenu-heading{font-size:.75rem;text-transform:uppercase}[role=\"main\"]{padding-top:133px}@media (min-width: 768px){[role=\"main\"]{padding-top:58px}}.navbar-brand{padding-top:.75rem;padding-bottom:.75rem;font-size:1rem;background-color:rgba(0,0,0,.25);box-shadow:inset -1px 0 0 rgba(0,0,0,.25)}.navbar .form-control{padding:.75rem 1rem;border-width:0;border-radius:0}";
 	}
-	
+
 	public function head($title='DashOne',$extraHtml='') {
 		$css=$this->css();
 		$cin=<<<inout
@@ -61,7 +59,7 @@ inout;
 		$this->html[]=$cin;
 		return $this;
 	} // head
-	
+
 	public function footer($extraHtml='') {
 		$cin= "<script src=\"https://code.jquery.com/jquery-3.3.1.slim.min.js\" integrity=\"sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo\" crossorigin=\"anonymous\"></script>
 <script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js\" integrity=\"sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1\" crossorigin=\"anonymous\"></script>
@@ -72,7 +70,7 @@ $extraHtml</body>
 		$this->html[]=$cin;
 		return $this;
 	} //footer
-	
+
 	public function menuUpper($leftControls=[],$rightControls=[]) {
 
 		$htmlLeft=$this->renderItem($leftControls);
@@ -80,19 +78,19 @@ $extraHtml</body>
 		$cin="<body>
 		<nav class='navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow'>
 		    <span class='navbar-brand col-sm-3 col-md-2 mr-0'>$htmlLeft</span>";
-		
+
 		$cin.="<ul class='navbar-nav px-3'>
 		        <li class='nav-item text-nowrap'>
 		            <span class='nav-link' href='#'>$htmlRight</span>
 		        </li>
 		    </ul>
 		</nav>";
-    
-    
+
+
 		$this->html[]=$cin;
 		return $this;
 	} // menuUpper
-	
+
 	public function startContent($class='container-fluid') {
 		$cin="<div class='$class'><div class='row'>\n";
 		$this->html[]=$cin;
@@ -107,19 +105,19 @@ $extraHtml</body>
 		$cin="<nav class='col-md-2 d-none d-md-block bg-light leftmenu'>
             <div class='leftmenu-sticky'>
                 <ul class='nav flex-column'>\n";
-			foreach($links as $link) {
-				if (is_object($link)) {
-					$cin .= "<li class='nav-item'>" . $link->addClass('nav-link')->render() . "</li>";
-				} else {
-					$cin .= "<li class='nav-item'>$link</li>";
-				}
+		foreach($links as $link) {
+			if (is_object($link)) {
+				$cin .= "<li class='nav-item'>" . $link->addClass('nav-link')->render() . "</li>";
+			} else {
+				$cin .= "<li class='nav-item'>$link</li>";
 			}
+		}
 		$cin.="</ul></div></nav>";
 		$this->html[]=$cin;
 		$this->hasSideMenu=true;
 		return $this;
 	} //menu
-	
+
 	public function startMain() {
 		if ($this->hasSideMenu) {
 			$class="col-md-9 ml-sm-auto col-lg-10 px-4";
@@ -129,6 +127,7 @@ $extraHtml</body>
 		$cin=<<<inout
 <main role="main" class="$class">
 <form method='post'>
+<input type='hidden' name='_ispostback' value='1'/>
 inout;
 		$this->html[]=$cin;
 		return $this;
@@ -142,7 +141,7 @@ inout;
 		$this->html[]=$cin;
 		return $this;
 	} // endMain	
-	
+
 	public function endContent() {
 		$cin=<<<inout
     </div>
@@ -151,7 +150,7 @@ inout;
 		$this->html[]=$cin;
 		return $this;
 	} // endContent
-	
+
 	public function title($title,$level=1) {
 		$this->html[]="<h{$level}>$title</h{$level}>\n";
 		return $this;
@@ -165,7 +164,7 @@ inout;
 	 * it generates a table
 	 * Example
 	 *      ->table([['Col1'=1,'Col2'=>2,'Col3'=>3],['Col1'=1,'Col2'=>2,'Col3'=>3]])
-     *      ->table([['Col1'=1,'Col2'=>2,'Col3'=>3],['Col1'=1,'Col2'=>2,'Col3'=>3]]
+	 *      ->table([['Col1'=1,'Col2'=>2,'Col3'=>3],['Col1'=1,'Col2'=>2,'Col3'=>3]]
 	 *              ,['Col1'=>'Column1','Col2'=>'Column2','Col3'=>'Column3'])
 	 * @param array $info
 	 * @param null|string[] $definition (optional) it is the defintion (name of the columns).
@@ -208,7 +207,7 @@ inout;
 	public function form($currentValues,$definition=null,$messages=[],$class='form-control',$subclass='') {
 		$this->html[]=(new FormOne($currentValues,$definition,$messages))->setClass($class)->setSubClass($subclass);
 		if ($this->hasPost==false) {
-			$this->html[] = "<input type='hidden' name='_ispostback' value='1'/>";
+
 			if ($this->csrf) {
 				@$_SESSION['_csrf']=uniqid();
 				$this->html[] = "<input type='hidden' name='_csrf' value='".$_SESSION['_csrf']."'/>";
@@ -217,9 +216,14 @@ inout;
 		}
 		return $this;
 	}
+	public function link($name, $url='#', $icon='') {
+		$this->html[]=new LinkOne($name,$url,$icon);
+		return $this;
+	}
+	
 	public function checkCSRF() {
-		if (!$this->csrf) return true; 
-		return @$_SESSION['_csrf']==@$_POST['_csrf']; 
+		if (!$this->csrf) return true;
+		return @$_SESSION['_csrf']==@$_POST['_csrf'];
 	}
 
 	/**
@@ -246,7 +250,7 @@ inout;
 		$this->html[]=$buttons; // $this::genNode('button',$buttons);
 		if ($formAligned) {
 			$this->rawHtml("</div></div>");
-		}		
+		}
 		return $this;
 	}
 
@@ -266,7 +270,15 @@ inout;
 	public function button($name, $label, $class='btn', $type='submit',$extra='',$formAligned=false) {
 		$button=new ButtonOne($name, $label, $class, $type,$extra);
 		return $this->buttons([$button],$formAligned);
-	}	
+	}
+
+	/**
+	 * @param string $title Title of the alert
+	 * @param string $content
+	 * @param string $class It uses the classes of bootstrap 4.1. Example "alert alert-info"
+	 * @see https://getbootstrap.com/docs/4.1/components/alerts/
+	 * @return $this
+	 */
 	public function alert($title,$content='',$class=null) {
 		$this->html[]=new AlertOne($title,$content,$class);
 		return $this;
@@ -283,7 +295,7 @@ inout;
 	}
 
 	/**
-	 * Example: 
+	 * Example:
 	 *      container("<span>%control</span>")->othercontrol()
 	 * @param $html
 	 * @return $this
@@ -303,7 +315,7 @@ inout;
 		$last=count($this->html)-1;
 		$this->html[$last]->setSubClass($class);
 		return $this;
-	}	
+	}
 	/**
 	 * Set a class of an element. It deletes the old class.
 	 * @param $class
@@ -364,7 +376,7 @@ inout;
 		$last=count($this->html)-1;
 		$this->html[$last]->addExtra($extraHtml);
 		return $this;
-	}	
+	}
 	/**
 	 * Render the dashboard
 	 * @param bool $return
@@ -415,7 +427,7 @@ inout;
 				case 'UlOne':
 					/** @see \eftec\DashOne\controls\UlOne::render */
 					return $item->render($this);
-					break;					
+					break;
 				case 'FormOne':
 					/** @see \eftec\DashOne\controls\FormOne::render */
 					return  $item->render();
@@ -427,16 +439,16 @@ inout;
 				case 'AlertOne':
 					/** @see \eftec\DashOne\controls\AlertOne::render */
 					return $item->render();
-					break;					
+					break;
 				case 'ImageOne':
 					/** @see \eftec\DashOne\controls\ImageOne::render */
 					return $item->render();
 					break;
-					
+
 				case 'LinkOne':
 					/** @see \eftec\DashOne\controls\LinkOne::render */
 					return $item->render();
-					break;					
+					break;
 				case 'ContainerOne':
 					$idHtml++;
 					/** @see \eftec\DashOne\controls\ContainerOne::render */
@@ -449,5 +461,5 @@ inout;
 			return $item;
 		}
 	}
-	
+
 } // end class DashOne

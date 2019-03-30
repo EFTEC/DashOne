@@ -10,7 +10,7 @@ use eftec\DashOne\DashOne;
  * @package eftec\DashOne\controls
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.1 2019-mar-14 4:59 PM 
+ * @version 1.2 2019-mar-30 4:59 PM 
  * @link https://github.com/EFTEC/DashOne
  */
 class TableOne extends ControlOne
@@ -20,7 +20,8 @@ class TableOne extends ControlOne
 
 	/**
 	 * TableOne constructor.
-	 * @param $values
+	 * @param array $values
+	 * @param null $definition
 	 */
 	public function __construct($values=[],$definition=null)
 	{
@@ -40,7 +41,6 @@ class TableOne extends ControlOne
 			foreach($copy as $cell) {
 				$definition[$cell]=$cell;
 			}
-			$definition=$definition;
 		}
 		$this->definition=$definition;
 		$this->values = $values;
