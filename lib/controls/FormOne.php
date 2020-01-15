@@ -28,7 +28,6 @@ class FormOne extends ControlOne
 	public function __construct($currentValues, $definition=null, $messages=[])
 	{
 		if ($definition==null) {
-
 			$definition=$currentValues;
 			foreach($definition as &$v) {
 				if(!is_array($v)) {
@@ -49,14 +48,14 @@ class FormOne extends ControlOne
 			switch ($defType) {
 				case 'hidden':
 					// hidden
-					$html.="<input type='hidden'  id='$key' name='$key' value='".htmlentities($cv)."'/>";
+					$html.="<input type='hidden'  id='$key' name='$key' value='".htmlentities($cv,ENT_QUOTES)."'/>";
 					break;
 				case 'textarea':
 					// text area
 					$html .= "<div class='form-group row'>\n";
 					$html .= "<label for='$key' class='col-sm-2 col-form-label'>$key</label>\n";
 					$html .= "<div class='col-sm-10'>\n";
-					$html.="<textarea class='{$this->class}' id='$key' name='$key' >".htmlentities($cv)."</textarea>\n";
+					$html.="<textarea class='{$this->class}' id='$key' name='$key' >".htmlentities($cv,ENT_QUOTES)."</textarea>\n";
 					$html .= "<em class='{$this->subclass}'>" . @$this->messages[$key] . "</em>";
 					$html .= "</div>\n";
 					$html .= "</div>\n";					
@@ -67,18 +66,19 @@ class FormOne extends ControlOne
 					$html .= "<div class='col-sm-10'>\n";
 					if (is_array($defType)) {
 						// select item
+
 						$html .= "<select class='{$this->class}' id='$key' name='$key'>\n";
 						foreach ($defType as $k => $v) {
 							if ($cv == $k) {
-								$html .= "<option name='$k' selected>$v</option>\n";
+								$html .= "<option value='$k' selected>$v</option>\n";
 							} else {
-								$html .= "<option name='$k'>$v</option>\n";
+								$html .= "<option value='$k'>$v</option>\n";
 							}
 						}
 						$html .= "</select>";
 					} else {
 						// textbox
-						$html .= "<input type='$defType' class='{$this->class}' id='$key' name='$key'  value='" . htmlentities($cv) . "' />";
+						$html .= "<input type='$defType' class='{$this->class}' id='$key' name='$key'  value='" . htmlentities($cv,ENT_QUOTES) . "' />";
 					}
 					$html .= "<em class='{$this->subclass}'>" . @$this->messages[$key] . "</em>";
 					$html .= "</div>\n";

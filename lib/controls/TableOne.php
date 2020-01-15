@@ -4,13 +4,14 @@ namespace eftec\DashOne\controls;
 
 
 use eftec\DashOne\DashOne;
+use Exception;
 
 /**
  * Class TableOne
  * @package eftec\DashOne\controls
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.2 2019-mar-30 4:59 PM 
+ * @version 1.3 2020-jan-13
  * @link https://github.com/EFTEC/DashOne
  */
 class TableOne extends ControlOne
@@ -50,7 +51,7 @@ class TableOne extends ControlOne
 	/**
 	 * @param DashOne|null $caller
 	 * @return string
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function render($caller=null) {
 		$html="<table class='".$this->class."'>{$this->extra}";

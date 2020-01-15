@@ -36,6 +36,7 @@ Create a new object DashOne (you will need to add the required include, via auto
 And you could render a page using the object of the class DashOne()
 
 ```php
+use eftec\DashOne\DashOne;
 $dash=new DashOne();
 $dash->head('Example - test 1'); // it is required
 $dash->rawHtml('hello world'); 
@@ -324,6 +325,7 @@ $dash->render();
 
 ## Version
 
+* 1.3 2020-01-15 new method fetchvalue()
 * 1.2 2019-03-30 New changes.  
 * 1.1 2019-03-17 Fixed some bugs  
 * 1.0 2019-03-01 First Version.  

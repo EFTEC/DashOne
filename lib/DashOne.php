@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection HtmlUnknownAttribute */
 
 namespace eftec\DashOne;
 use eftec\DashOne\controls\AlertOne;
@@ -9,18 +9,17 @@ use eftec\DashOne\controls\ImageOne;
 use eftec\DashOne\controls\LinkOne;
 use eftec\DashOne\controls\TableOne;
 use eftec\DashOne\controls\UlOne;
-use Exception;
 
 /**
  * Class DashOne
  * @package eftec\DashOne
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.2 2019-mar-30 4:59 PM
+ * @version 1.23 2020-ene.-15 11:49 a. m. 
  * @link https://github.com/EFTEC/DashOne
  */
 class DashOne {
-	const VERSION=1.2;
+	const VERSION=1.3;
 
 	private $html=[];
 	var $hasSideMenu=false;
@@ -98,7 +97,7 @@ $extraHtml</body>
 	} //startContent
 
 	/**
-	 * @param LinkOne[] $links
+	 * @param LinkOne[]|string[] $links
 	 * @return $this
 	 */
 	public function menu($links) {
@@ -192,6 +191,35 @@ inout;
 		return $this;
 	}
 
+    /**
+     * It fetchs values from $_POST, $_GET or $_REQUEST and it returns the value in $currentValues<br>
+     * It does not sanitize any value.
+     *
+     * @param array  $currentValues
+     * @param string $method =['get','post','fetch'][$i]
+     *
+     * @return DashOne
+     */
+	public function fetchValue(&$currentValues,$method='request') {
+	    foreach($currentValues as $k=>$v) {
+	        switch ($method) {
+                case 'post':
+                    $read=@$_POST[$k];
+                    break;
+                case 'get':
+                    $read=@$_GET[$k];
+                    break;
+                default:
+                    $read=@$_REQUEST[$k];
+                    break;
+            }
+            if($read!==null) {
+                $currentValues[$k]=$read;
+            }
+        } 
+	    return $this;
+    }
+
 	/**
 	 * It generates an form
 	 * Example:
@@ -207,7 +235,7 @@ inout;
 	public function form($currentValues,$definition=null,$messages=[],$class='form-control',$subclass='') {
 		$this->html[]=(new FormOne($currentValues,$definition,$messages))->setClass($class)->setSubClass($subclass);
 		if ($this->hasPost==false) {
-
+        
 			if ($this->csrf) {
 				@$_SESSION['_csrf']=uniqid();
 				$this->html[] = "<input type='hidden' name='_csrf' value='".$_SESSION['_csrf']."'/>";
