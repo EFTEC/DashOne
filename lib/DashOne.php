@@ -9,25 +9,57 @@ use eftec\DashOne\controls\ImageOne;
 use eftec\DashOne\controls\LinkOne;
 use eftec\DashOne\controls\TableOne;
 use eftec\DashOne\controls\UlOne;
+use Exception;
 
 /**
  * Class DashOne
  * @package eftec\DashOne
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.23 2020-ene.-15 11:49 a. m. 
+ * @version 1.24 2020-ene.-16 11:49 a. m. 
  * @link https://github.com/EFTEC/DashOne
  */
 class DashOne {
-	const VERSION=1.3;
+	const VERSION=1.4;
 
 	private $html=[];
 	var $hasSideMenu=false;
 	private $hasPost=false;
 	/** @var bool true if we want to check csrf */
+    var $salt='';
 	var $csrf=false;
+    /**
+     * @var callable|null A callable function that with an argument (array) and it must returns a boolean<br>
+     *                    Example:
+     *                    <pre>
+     *                    $validateLogin= function($user) {
+     *                      if($user['username']=='john' && $user['password']=='doe') {
+     *                            return true;
+     *                        }
+     *                        return false;
+     *                    };     
+     *                    </pre>
+     *                    
+     */
+	var $validateLogin=null;
 
-	private static function genNode($type='',$value=null,$class='',$id='',$messages=null) {
+    /**
+     * DashOne constructor.
+     *
+     * @param bool     $hasSideMenu (default false) if true then it has a side menu
+     * @param bool     $csrf (default false) if true then the forms are protected by csrf
+     * @param string   $salt (optional) A salt used for autologin.
+     * @param callable $validateLogin (optional) an anonymous function that returns if the user
+     *                                (passed by argument) is true or not
+     */
+    public function __construct($hasSideMenu=false,$csrf=false,$salt='',  $validateLogin=null) {
+        $this->hasSideMenu = $hasSideMenu;
+        $this->csrf = $csrf;
+        $this->salt=$salt;
+        $this->validateLogin = $validateLogin;
+    }
+
+    private static function genNode($type='',$value=null,$class='',$id='',$messages=null) {
 		return ['_def'=>$type,"value"=>$value,"class"=>$class,"id"=>$id,"messages"=>$messages];
 	}
 
@@ -37,9 +69,13 @@ class DashOne {
 		.far,.fas{width:16px;height:16px;vertical-align:text-bottom}
 		.leftmenu{position:fixed;top:0;bottom:0;left:0;z-index:100;padding:48px 0 0;box-shadow:inset -1px 0 0 rgba(0,0,0,.1)}.leftmenu-sticky{position:relative;top:0;height:calc(100vh - 48px);padding-top:.5rem;overflow-x:hidden;overflow-y:auto}.leftmenu .nav-link{font-weight:500;color:#333}.leftmenu .nav-link .far,.leftmenu .nav-link .fas{margin-right:4px;color:#999}.leftmenu .nav-link.active{color:#007bff}.leftmenu .nav-link:hover .far,.leftmenu .nav-link:hover .fas,.leftmenu .nav-link.active .far,.leftmenu .nav-link.active .fas{color:inherit}.leftmenu-heading{font-size:.75rem;text-transform:uppercase}[role=\"main\"]{padding-top:133px}@media (min-width: 768px){[role=\"main\"]{padding-top:58px}}.navbar-brand{padding-top:.75rem;padding-bottom:.75rem;font-size:1rem;background-color:rgba(0,0,0,.25);box-shadow:inset -1px 0 0 rgba(0,0,0,.25)}.navbar .form-control{padding:.75rem 1rem;border-width:0;border-radius:0}";
 	}
+	private function cssLogin() {
+	    return '.bd-placeholder-img{font-size:1.125rem;text-anchor:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}@media (min-width:768px){.bd-placeholder-img-lg{font-size:3.5rem}}body,html{height:100%}body{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;padding-top:40px;padding-bottom:40px;background-color:#f5f5f5}.form-signin{width:100%;max-width:330px;padding:15px;margin:auto}.form-signin .checkbox{font-weight:400}.form-signin .form-control{position:relative;box-sizing:border-box;height:auto;padding:10px;font-size:16px}.form-signin .form-control:focus{z-index:2}.form-signin input[type=email]{margin-bottom:-1px;border-bottom-right-radius:0;border-bottom-left-radius:0}.form-signin input[type=password]{margin-bottom:10px;border-top-left-radius:0;border-top-right-radius:0}';
+    }
 
-	public function head($title='DashOne',$extraHtml='') {
-		$css=$this->css();
+	public function head($title='DashOne',$extraHtml='',$login=false) {
+        $css=($login)? $this->cssLogin(): $this->css();
+		
 		$cin=<<<inout
 <!doctype html>
 <html lang="en">
@@ -70,7 +106,122 @@ $extraHtml</body>
 		return $this;
 	} //footer
 
-	public function menuUpper($leftControls=[],$rightControls=[]) {
+    /**
+     * @param array $user=['username' => '', 'password' => '', '_csrf' => '','result'=>false]
+     * @param string $icon
+     *
+     * @return $this
+     */
+    public function login($user,$icon="https://avatars2.githubusercontent.com/u/19829219?s=400&u=ac2b98e7ad8e227baf0c7d970d18632204f52f5e&v=4") {
+        
+	    $cin='<body class="text-center">  
+    <form class="form-signin" method="post">
+    <input type=\'hidden\' name=\'_ispostback\' value=\'1\'/>
+  <img class="mb-4" src="'.$icon.'" alt="" width="72" height="72">
+  <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+  <label for="username" class="sr-only">User Name</label>
+  <input type="text" id="username" name="username" class="form-control" placeholder="User Name" value="'.$user['username'].'" required autofocus>
+  <label for="password" class="sr-only">Password</label>
+  <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+ <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" name="remember" checked="checked" value="remember-me"> Remember me
+    </label>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" name="button" value="signin" type="submit">Sign in</button><br>';
+        $this->html[]=$cin;
+        $this->html[] = "<input type='hidden' name='_csrf' value='".$user['_csrf']."'/>";
+        return $this;
+    }
+    public function endLogin() {
+	    $cin='</form></body></html>';
+        $this->html[]=$cin;
+        return $this;
+    }
+
+    /**
+     * @param array $user=['username' => '', 'password' => '','remember'='', '_csrf' => false,'result'=>false];
+     *
+     * @return $this
+     */
+    public function fetchLogin(&$user) {
+        if(!$this->isPostBack() && isset($_COOKIE["user"])) {
+            // get the cookie
+            $user=@unserialize($this->decrypt($_COOKIE["user"]));
+            if($user!==false) {
+                if ($this->validateLogin === null) {
+                    $result = true;
+                } else {
+                    $result = call_user_func($this->validateLogin,$user);
+                }
+                $user['result']=$result;
+                if($result) $_SESSION['user']=$user;
+                return $this;
+            }
+        }
+        if ($this->isPostBack()) {
+            $user = ['username' => '', 'password' => '','remember'=>'', '_csrf' => false,'result'=>false];
+            $this->fetchValue($user, 'post');
+            $result=(@$_SESSION['_csrf'] != $user['_csrf']) ? false : true;
+            if($result) {
+                if ($this->validateLogin === null) {
+                    $result = true;
+                } else {
+                    $result = call_user_func($this->validateLogin,$user);
+                }
+                if($result) {
+                    if($user['remember']) {
+                        // sets cookie
+                        $cookie=$this->encrypt(serialize($user));
+                        @setcookie("user", $cookie, time()+3600000);
+                    }
+                }
+            }
+            @$_SESSION['_csrf']=uniqid();
+            $user['_csrf']=$_SESSION['_csrf'];
+            $user['result']=$result;
+            if($result) $_SESSION['user']=$user;
+        } else {
+            @$_SESSION['_csrf']=uniqid();
+            $user = ['username' => '', 'password' => '','remember'=>'', '_csrf' => $_SESSION['_csrf'],'result'=>false];
+        }
+	    return $this;
+    }
+    /**
+     * It is a two way decryption
+     * @param $data
+     * @return bool|string
+     */
+    public function decrypt($data)
+    {
+        $data=base64_decode(str_replace(array('-', '_'),array('+', '/'),$data));
+        $iv_strlen = 2 * openssl_cipher_iv_length('AES-256-CTR');
+        if (preg_match("/^(.{" . $iv_strlen . "})(.+)$/", $data, $regs)) {
+            try {
+                list(, $iv, $crypted_string) = $regs;
+                $decrypted_string = openssl_decrypt($crypted_string, 'AES-256-CTR', $this->salt, 0, hex2bin($iv));
+                return substr($decrypted_string, strlen($this->salt));
+            } catch(Exception $ex) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    /**
+     * It is a two way encryption. The result is htlml/link friendly.
+     * @param string $data
+     * @return string
+     */
+    public function encrypt($data)
+    {
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('AES-256-CTR'));
+        $encrypted_string = bin2hex($iv) . openssl_encrypt($this->salt . $data, 'AES-256-CTR', $this->salt, 0, $iv);
+        return str_replace(array('+', '/'), array('-', '_'),base64_encode($encrypted_string));
+    }
+
+
+    public function menuUpper($leftControls=[],$rightControls=[]) {
 
 		$htmlLeft=$this->renderItem($leftControls);
 		$htmlRight=$this->renderItem($rightControls);
@@ -238,7 +389,7 @@ inout;
         
 			if ($this->csrf) {
 				@$_SESSION['_csrf']=uniqid();
-				$this->html[] = "<input type='hidden' name='_csrf' value='".$_SESSION['_csrf']."'/>";
+				$this->html[] = "<input type='hidden' name='_csrf' value='".@$_SESSION['_csrf']."'/>";
 			}
 			$this->hasPost=true;
 		}

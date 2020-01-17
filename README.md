@@ -6,7 +6,7 @@ This library allows to create a fast dashboard with the basic features without a
 [![Build Status](https://travis-ci.org/EFTEC/DashOne.svg?branch=master)](https://travis-ci.org/EFTEC/DashOne)
 [![Packagist](https://img.shields.io/packagist/v/eftec/dashone.svg)](https://packagist.org/packages/eftec/dashone)
 [![Total Downloads](https://poser.pugx.org/eftec/dashone/downloads)](https://packagist.org/packages/eftec/dashone)
-[![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)]()
 [![composer](https://img.shields.io/badge/composer-%3E1.6-blue.svg)]()
 [![php](https://img.shields.io/badge/php->5.6-green.svg)]()
 [![php](https://img.shields.io/badge/php-7.x-green.svg)]()
@@ -325,6 +325,15 @@ $dash->render();
 
 ## Version
 
+* 1.4 2020-16-01 
+    * new method cssLogin()
+    * new method login()
+    * new method fetchLogin()
+    * new method decrypt()
+    * new method encrypt()      
+    * new field var $salt='';
+    * new field $validateLogin (callable)
+    * changes to __construct()
 * 1.3 2020-01-15 new method fetchvalue()
 * 1.2 2019-03-30 New changes.  
 * 1.1 2019-03-17 Fixed some bugs  
