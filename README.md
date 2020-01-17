@@ -6,7 +6,7 @@ This library allows to create a fast dashboard with the basic features without a
 [![Build Status](https://travis-ci.org/EFTEC/DashOne.svg?branch=master)](https://travis-ci.org/EFTEC/DashOne)
 [![Packagist](https://img.shields.io/packagist/v/eftec/dashone.svg)](https://packagist.org/packages/eftec/dashone)
 [![Total Downloads](https://poser.pugx.org/eftec/dashone/downloads)](https://packagist.org/packages/eftec/dashone)
-[![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)]()
 [![composer](https://img.shields.io/badge/composer-%3E1.6-blue.svg)]()
 [![php](https://img.shields.io/badge/php->5.6-green.svg)]()
 [![php](https://img.shields.io/badge/php-7.x-green.svg)]()
