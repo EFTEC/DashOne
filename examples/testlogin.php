@@ -39,7 +39,7 @@ if($user['result']) {
 
 
 $dash->head('Example - test 1','',true);
-$dash->login($user);
+$dash->login($user,null,'user "john" and password "doe"');
 $dash->alert($message);
 $dash->footer();
 $dash->endLogin();

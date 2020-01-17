@@ -57,6 +57,7 @@ It is possible to add new elements using fluent interface (chain methods each on
 Example: It renders an empty page
 
 ```php
+use eftec\DashOne\DashOne;
 $dash=new DashOne();
 
 $dash->head('Example - test 1');
@@ -67,9 +68,10 @@ $dash->render();
 Example using fluent
 
 ```php
+use eftec\DashOne\DashOne;
 $dash=new DashOne();
-    ->head('Example - test 1');
-    ->footer();
+$dash->head('Example - test 1')
+    ->footer()
     ->render();
 ```
 
@@ -324,6 +326,9 @@ $dash->render();
 
 ## Version
 
+* 1.5 2020-16-01
+    * new method getLogin()
+    * new method logout()
 * 1.4 2020-16-01 
     * new method cssLogin()
     * new method login()

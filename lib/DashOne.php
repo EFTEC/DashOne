@@ -16,11 +16,11 @@ use Exception;
  * @package eftec\DashOne
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.24 2020-ene.-16 11:49 a. m. 
+ * @version 1.5 2020-ene.-16 11:49 a. m. 
  * @link https://github.com/EFTEC/DashOne
  */
 class DashOne {
-	const VERSION=1.4;
+	const VERSION=1.5;
 
 	private $html=[];
 	var $hasSideMenu=false;
@@ -107,18 +107,21 @@ $extraHtml</body>
 	} //footer
 
     /**
-     * @param array $user=['username' => '', 'password' => '', '_csrf' => '','result'=>false]
-     * @param string $icon
+     * @param array       $user =['username' => '', 'password' => '', '_csrf' => '','result'=>false]
+     * @param string|null $icon (optional) the icon of the login page
+     * @param string      $title (optional) The title of the login page
      *
      * @return $this
      */
-    public function login($user,$icon="https://avatars2.githubusercontent.com/u/19829219?s=400&u=ac2b98e7ad8e227baf0c7d970d18632204f52f5e&v=4") {
+    public function login($user,$icon=null,$title='') {
+        $icon= $icon===null ? "https://avatars2.githubusercontent.com/u/19829219?s=400&u=ac2b98e7ad8e227baf0c7d970d18632204f52f5e&v=4" : $icon;
+        $title= $title===null ? 'Please sign in' : $title;
         
 	    $cin='<body class="text-center">  
     <form class="form-signin" method="post">
     <input type=\'hidden\' name=\'_ispostback\' value=\'1\'/>
   <img class="mb-4" src="'.$icon.'" alt="" width="72" height="72">
-  <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+  <h1 class="h3 mb-3 font-weight-normal">'.$title.'</h1>
   <label for="username" class="sr-only">User Name</label>
   <input type="text" id="username" name="username" class="form-control" placeholder="User Name" value="'.$user['username'].'" required autofocus>
   <label for="password" class="sr-only">Password</label>
@@ -173,7 +176,7 @@ $extraHtml</body>
                     if($user['remember']) {
                         // sets cookie
                         $cookie=$this->encrypt(serialize($user));
-                        @setcookie("user", $cookie, time()+3600000);
+                        @setcookie("user", $cookie, time()+31556952); // one year
                     }
                 }
             }
@@ -186,6 +189,42 @@ $extraHtml</body>
             $user = ['username' => '', 'password' => '','remember'=>'', '_csrf' => $_SESSION['_csrf'],'result'=>false];
         }
 	    return $this;
+    }
+
+    /**
+     * It gets the current user or it redirect to the login page (or returns null).<br>
+     * Note: It requires a session initiated.
+     * 
+     * @param string|null $loginPage (if null then it does not redirect but returns an null user.
+     *
+     * @return mixed
+     */
+    public static function getLogin($loginPage='login.php') {
+        $user=@$_SESSION['user'];
+        if(!$user || $user['result']===false) {
+            if($loginPage!==null) {
+                header('location:' . $loginPage);
+                die(1);
+            } else {
+                $user=null;
+            }
+        }
+        return $user;
+    }
+
+    /**
+     * It logout, deletes the session, the cookie (if any), and (optionally) returns to the login page
+     * 
+     * @param string|null $loginPage if null then it stays in the same page.
+     */
+    public static function logout($loginPage='login.php') {
+        $_SESSION['user']=null;
+        @setcookie('user',null,1);
+        @session_destroy();
+        if($loginPage!==null) {
+            header('location:' . $loginPage);
+            die(1);
+        }
     }
     /**
      * It is a two way decryption
