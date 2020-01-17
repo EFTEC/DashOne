@@ -13,7 +13,6 @@ This library allows to create a fast dashboard with the basic features without a
 [![CocoaPods](https://img.shields.io/badge/docs-70%25-yellow.svg)]()
 
 
-
 Example  ( [examples/test.php](examples/test2.php) ):
 
 ![doc/screenshot1.jpg](doc/screenshot1.jpg)
