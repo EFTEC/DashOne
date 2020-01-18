@@ -52,7 +52,9 @@ $links=[
 $dash=new DashOne();
 
 $dash->head('Example - test 1');
-$dash->menuUpper([new ImageOne('https://via.placeholder.com/32x32')," - ",new LinkOne('Cocacola','#')]);
+$dash->menuUpper(
+    [new ImageOne('https://via.placeholder.com/32x32')," - ",new LinkOne('Fanta','#','','text-light')]
+,[new LinkOne('Fanta','#','','text-light'),' ',new LinkOne('Fanta','#','','text-light'),' ',new LinkOne('Fanta','#','','text-light')]);
 $dash
 	->startcontent()
 		->menu($links)

@@ -326,6 +326,9 @@ $dash->render();
 
 ## Version
 
+* 1.6 2020-18-01
+    * modified LinkOne::LinkOne()
+    * added summernote to textarea
 * 1.5 2020-16-01
     * new method getLogin()
     * new method logout()

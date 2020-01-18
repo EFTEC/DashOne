@@ -55,7 +55,7 @@ class FormOne extends ControlOne
 					$html .= "<div class='form-group row'>\n";
 					$html .= "<label for='$key' class='col-sm-2 col-form-label'>$key</label>\n";
 					$html .= "<div class='col-sm-10'>\n";
-					$html.="<textarea class='{$this->class}' id='$key' name='$key' >".htmlentities($cv,ENT_QUOTES)."</textarea>\n";
+					$html.="<textarea class='{$this->class} summernote' id='$key' name='$key' >".htmlentities($cv,ENT_QUOTES)."</textarea>\n";
 					$html .= "<em class='{$this->subclass}'>" . @$this->messages[$key] . "</em>";
 					$html .= "</div>\n";
 					$html .= "</div>\n";					

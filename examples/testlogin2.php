@@ -4,7 +4,7 @@ use eftec\DashOne\DashOne;
 
 @session_start();
 include "../vendor/autoload.php";
-@session_write_close();
+
 
 $user= DashOne::getLogin('testlogin.php');
 
