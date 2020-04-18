@@ -325,7 +325,8 @@ $dash->render();
 
 
 ## Version
-
+* 1.6.1 2020-03-03
+    * Fix: TableOne now allows non-base zero array
 * 1.6 2020-18-01
     * modified LinkOne::LinkOne()
     * added summernote to textarea

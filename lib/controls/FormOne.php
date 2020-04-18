@@ -3,14 +3,12 @@
 namespace eftec\DashOne\controls;
 
 
-use eftec\DashOne\DashOne;
-
 /**
  * Class FormOne
  * @package eftec\DashOne\controls
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 0.1 2019-mar-14 4:59 PM
+ * @version 1 2020-03-03
  * @link https://github.com/EFTEC/DashOne
  */
 class FormOne extends ControlOne

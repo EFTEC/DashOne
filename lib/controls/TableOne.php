@@ -27,14 +27,16 @@ class TableOne extends ControlOne
 	public function __construct($values=[],$definition=null)
 	{
 		if ($definition==null) {
-			if (isset($values[0])) {
-				$definition = array_keys($values[0]);
+		    $first=reset($values);
+			if (isset($first)) {
+				$definition = array_keys($first);
 			}
 			/*
 			foreach($definition as &$v) {
 			}
 			*/
 		}
+		
 		if (isset($definition[0])) {
 			// its not associative
 			$copy=$definition;

@@ -2,6 +2,7 @@
   "name": "eftec/dashone",
   "description": "A fast UI Dashboard generator for PHP",
   "type": "library",
+  "version": "1.6.1",
   "keywords": ["blade","template","view","php","templating"],
   "homepage": "https://github.com/EFTEC/DashOne",
   "license": "LGPL-3.0-or-later",
@@ -10,11 +11,6 @@
       "name": "Jorge Patricio Castro Castillo",
       "email": "jcastro@eftec.cl"
     }],
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.6-dev"
-    }
-  },
   "config": {
     "platform": {
       "php": "5.6.1"

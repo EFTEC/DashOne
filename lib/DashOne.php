@@ -1,4 +1,7 @@
-<?php /** @noinspection HtmlUnknownAttribute */
+<?php /** @noinspection PhpUnused */
+/** @noinspection JSUnresolvedFunction */
+
+/** @noinspection HtmlUnknownAttribute */
 
 namespace eftec\DashOne;
 use eftec\DashOne\controls\AlertOne;
@@ -16,11 +19,11 @@ use Exception;
  * @package eftec\DashOne
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.6 2020-ene.-16 11:49 a. m.
+ * @version 1.6.1 2020-03-03
  * @link https://github.com/EFTEC/DashOne
  */
 class DashOne {
-    const VERSION=1.5;
+    const VERSION='1.6.1';
 
     private $html=[];
     var $hasSideMenu=false;
@@ -59,7 +62,7 @@ class DashOne {
         $this->validateLogin = $validateLogin;
     }
 
-    private static function genNode($type='',$value=null,$class='',$id='',$messages=null) {
+    public static function genNode($type='',$value=null,$class='',$id='',$messages=null) {
         return ['_def'=>$type,"value"=>$value,"class"=>$class,"id"=>$id,"messages"=>$messages];
     }
 
