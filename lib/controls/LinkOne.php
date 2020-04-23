@@ -12,8 +12,8 @@ namespace eftec\DashOne\controls;
  */
 class LinkOne extends ControlOne
 {
-	var $url;
-	var $icon;
+	public $url;
+	public $icon;
 
     /**
      * LinkOne constructor.
@@ -32,7 +32,7 @@ class LinkOne extends ControlOne
 	}
 	public function render() {
 		$html="<a class='{$this->class}' href='{$this->url}'>";
-		$html.=($this->icon)?"<i class='{$this->icon}'></i> ":"";
+		$html.=($this->icon)?"<i class='{$this->icon}'></i> ": '';
 		$html.="{$this->name}{$this->extra}</a>";
 		return $html;
 	}

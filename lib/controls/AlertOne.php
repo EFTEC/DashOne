@@ -12,8 +12,8 @@ namespace eftec\DashOne\controls;
  */
 class AlertOne extends ControlOne
 {
-	var $title;
-	var $content;
+	public $title;
+	public $content;
 
 	/**
 	 * AlertOne constructor.

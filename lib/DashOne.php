@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnused */
+<?php /** @noinspection CryptographicallySecureRandomnessInspection */
+/** @noinspection UnknownInspectionInspection */
+/** @noinspection PhpUnused */
 /** @noinspection JSUnresolvedFunction */
 
 /** @noinspection HtmlUnknownAttribute */
@@ -19,18 +21,23 @@ use Exception;
  * @package eftec\DashOne
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.6.1 2020-03-03
+ * @version 1.6.2 2020-04-23
  * @link https://github.com/EFTEC/DashOne
  */
 class DashOne {
-    const VERSION='1.6.1';
+    const VERSION='1.6.2';
 
     private $html=[];
-    var $hasSideMenu=false;
+    public $hasSideMenu=false;
     private $hasPost=false;
     /** @var bool true if we want to check csrf */
-    var $salt='';
-    var $csrf=false;
+    public $salt='';
+    public $csrf=false;
+    /**
+     * In constructor, it stores the user and password.
+     * @var string[] 
+     */
+    public $validateAccount=['user'=>'','password'=>''];
     /**
      * @var callable|null A callable function that with an argument (array) and it must returns a boolean<br>
      *                    Example:
@@ -44,30 +51,51 @@ class DashOne {
      *                    </pre>
      *
      */
-    var $validateLogin=null;
+    public $validateLogin;
 
     /**
-     * DashOne constructor.
+     * DashOne constructor.<br>
+     * <pre>
+     * $obj=new DashOne(true,true,'some salt',function($userArr) { return true; });
+     * $obj=new DashOne(true,true,'some salt',['user'='admin','password'='admin']);
+     * </pre>
      *
      * @param bool     $hasSideMenu (default false) if true then it has a side menu
      * @param bool     $csrf (default false) if true then the forms are protected by csrf
      * @param string   $salt (optional) A salt used for autologin.
-     * @param callable $validateLogin (optional) an anonymous function that returns if the user
-     *                                (passed by argument) is true or not
+     * @param callable|array $validateLogin (optional) an anonymous function that returns if the user
+     *                                (passed by argument) is true or not<br>
+     *                                if is array, then it is a simple user/password
+     * 
      */
     public function __construct($hasSideMenu=false,$csrf=false,$salt='',  $validateLogin=null) {
         $this->hasSideMenu = $hasSideMenu;
         $this->csrf = $csrf;
         $this->salt=$salt;
-        $this->validateLogin = $validateLogin;
+        if(is_callable($validateLogin)) {
+            $this->validateLogin = $validateLogin;    
+        }
+        if(is_array($validateLogin)) {
+            $this->validateAccount=$validateLogin;
+            $this->validateLogin =  function($user) {
+                $r= $user['username'] === $this->validateAccount['user'] 
+                    && $user['password'] === $this->validateAccount['password'];
+                if($r===false) {
+                    sleep(3);
+                }
+                return $r;
+            };
+        }
+        
+        
     }
 
     public static function genNode($type='',$value=null,$class='',$id='',$messages=null) {
-        return ['_def'=>$type,"value"=>$value,"class"=>$class,"id"=>$id,"messages"=>$messages];
+        return ['_def'=>$type, 'value' =>$value, 'class' =>$class, 'id' =>$id, 'messages' =>$messages];
     }
 
     private function css() {
-        return "body{font-size:.875rem}.bd-placeholder-img{font-size:1.125rem;text-anchor:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}@media (min-width: 768px){.bd-placeholder-img-lg{font-size:3.5rem}}.form-control-dark{color:#fff;background-color:rgba(255,255,255,.1);border-color:rgba(255,255,255,.1)}.form-control-dark:focus{border-color:transparent;
+        return 'body{font-size:.875rem}.bd-placeholder-img{font-size:1.125rem;text-anchor:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}@media (min-width: 768px){.bd-placeholder-img-lg{font-size:3.5rem}}.form-control-dark{color:#fff;background-color:rgba(255,255,255,.1);border-color:rgba(255,255,255,.1)}.form-control-dark:focus{border-color:transparent;
 		box-shadow:0 0 0 3px rgba(255,255,255,.25)}
 		.far,.fas{width:16px;height:16px;vertical-align:text-bottom}
 		.leftmenu{position:fixed;top:0;bottom:0;left:0;z-index:100;padding:48px 0 0;box-shadow:inset -1px 0 0 rgba(0,0,0,.1)}
@@ -81,8 +109,8 @@ class DashOne {
 		.leftmenu .nav-link:hover .fas,
 		.leftmenu .nav-link.active .far,
 		.leftmenu .nav-link.active .fas{color:inherit}
-		.leftmenu-heading{font-size:.75rem;text-transform:uppercase}[role=\"main\"]{padding-top:133px}
-		@media (min-width: 768px){[role=\"main\"]{padding-top:58px}}.navbar-brand{padding-top:.75rem;padding-bottom:.75rem;font-size:1rem;background-color:rgba(0,0,0,.25);box-shadow:inset -1px 0 0 rgba(0,0,0,.25)}.navbar .form-control{padding:.75rem 1rem;border-width:0;border-radius:0}";
+		.leftmenu-heading{font-size:.75rem;text-transform:uppercase}[role="main"]{padding-top:133px}
+		@media (min-width: 768px){[role="main"]{padding-top:58px}}.navbar-brand{padding-top:.75rem;padding-bottom:.75rem;font-size:1rem;background-color:rgba(0,0,0,.25);box-shadow:inset -1px 0 0 rgba(0,0,0,.25)}.navbar .form-control{padding:.75rem 1rem;border-width:0;border-radius:0}';
     }
     private function cssLogin() {
         return '.bd-placeholder-img{font-size:1.125rem;text-anchor:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}@media (min-width:768px){.bd-placeholder-img-lg{font-size:3.5rem}}body,html{height:100%}body{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;padding-top:40px;padding-bottom:40px;background-color:#f5f5f5}.form-signin{width:100%;max-width:330px;padding:15px;margin:auto}.form-signin .checkbox{font-weight:400}.form-signin .form-control{position:relative;box-sizing:border-box;height:auto;padding:10px;font-size:16px}.form-signin .form-control:focus{z-index:2}.form-signin input[type=email]{margin-bottom:-1px;border-bottom-right-radius:0;border-bottom-left-radius:0}.form-signin input[type=password]{margin-bottom:10px;border-top-left-radius:0;border-top-right-radius:0}';
@@ -136,7 +164,8 @@ inout;
      * @return $this
      */
     public function login($user,$icon=null,$title='') {
-        $icon= $icon===null ? "https://avatars2.githubusercontent.com/u/19829219?s=400&u=ac2b98e7ad8e227baf0c7d970d18632204f52f5e&v=4" : $icon;
+        $icon= $icon===null ? 'https://avatars2.githubusercontent.com/u/19829219?s=400&u=ac2b98e7ad8e227baf0c7d970d18632204f52f5e&v=4'
+            : $icon;
         $title= $title===null ? 'Please sign in' : $title;
 
         $cin='<body class="text-center">  
@@ -170,9 +199,9 @@ inout;
      * @return $this
      */
     public function fetchLogin(&$user) {
-        if(!$this->isPostBack() && isset($_COOKIE["user"])) {
+        if(isset($_COOKIE['user']) && !$this->isPostBack()) {
             // get the cookie
-            $user=@unserialize($this->decrypt($_COOKIE["user"]));
+            $user=@unserialize($this->decrypt($_COOKIE['user']));
             if($user!==false) {
                 if ($this->validateLogin === null) {
                     $result = true;
@@ -180,34 +209,36 @@ inout;
                     $result = call_user_func($this->validateLogin,$user);
                 }
                 $user['result']=$result;
-                if($result) $_SESSION['user']=$user;
+                if($result) {
+                    $_SESSION['user'] = $user;
+                }
                 return $this;
             }
         }
         if ($this->isPostBack()) {
             $user = ['username' => '', 'password' => '','remember'=>'', '_csrf' => false,'result'=>false];
             $this->fetchValue($user, 'post');
-            $result=(@$_SESSION['_csrf'] != $user['_csrf']) ? false : true;
+            $result= @$_SESSION['_csrf'] === $user['_csrf'];
             if($result) {
                 if ($this->validateLogin === null) {
                     $result = true;
                 } else {
                     $result = call_user_func($this->validateLogin,$user);
                 }
-                if($result) {
-                    if($user['remember']) {
-                        // sets cookie
-                        $cookie=$this->encrypt(serialize($user));
-                        @setcookie("user", $cookie, time()+31556952); // one year
-                    }
+                if($result && $user['remember']) {
+                    // sets cookie
+                    $cookie=$this->encrypt(serialize($user));
+                    @setcookie('user', $cookie, time()+31556952); // one year
                 }
             }
-            @$_SESSION['_csrf']=uniqid();
+            @$_SESSION['_csrf']=uniqid('',true);
             $user['_csrf']=$_SESSION['_csrf'];
             $user['result']=$result;
-            if($result) $_SESSION['user']=$user;
+            if($result) {
+                $_SESSION['user'] = $user;
+            }
         } else {
-            @$_SESSION['_csrf']=uniqid();
+            @$_SESSION['_csrf']=uniqid('',true);
             $user = ['username' => '', 'password' => '','remember'=>'', '_csrf' => $_SESSION['_csrf'],'result'=>false];
         }
         return $this;
@@ -227,9 +258,9 @@ inout;
             if($loginPage!==null) {
                 header('location:' . $loginPage);
                 die(1);
-            } else {
-                $user=null;
             }
+
+            $user=null;
         }
         return $user;
     }
@@ -257,7 +288,7 @@ inout;
     {
         $data=base64_decode(str_replace(array('-', '_'),array('+', '/'),$data));
         $iv_strlen = 2 * openssl_cipher_iv_length('AES-256-CTR');
-        if (preg_match("/^(.{" . $iv_strlen . "})(.+)$/", $data, $regs)) {
+        if (preg_match('/^(.{' . $iv_strlen . '})(.+)$/', $data, $regs)) {
             try {
                 list(, $iv, $crypted_string) = $regs;
                 $decrypted_string = openssl_decrypt($crypted_string, 'AES-256-CTR', $this->salt, 0, hex2bin($iv));
@@ -327,12 +358,12 @@ inout;
                 <ul class='nav flex-column'>\n";
         foreach($links as $link) {
             if (is_object($link)) {
-                $cin .= "<li class='nav-item'>" . $link->addClass('nav-link')->render() . "</li>";
+                $cin .= "<li class='nav-item'>" . $link->addClass('nav-link')->render() . '</li>';
             } else {
                 $cin .= "<li class='nav-item'>$link</li>";
             }
         }
-        $cin.="</ul></div></nav>";
+        $cin.= '</ul></div></nav>';
         $this->html[]=$cin;
         $this->hasSideMenu=true;
         return $this;
@@ -340,9 +371,9 @@ inout;
 
     public function startMain() {
         if ($this->hasSideMenu) {
-            $class="col-md-9 ml-sm-auto col-lg-10 px-4";
+            $class= 'col-md-9 ml-sm-auto col-lg-10 px-4';
         } else {
-            $class="col-md-12 ml-sm-auto col-lg-12 px-4";
+            $class= 'col-md-12 ml-sm-auto col-lg-12 px-4';
         }
         $cin=<<<inout
 <main role="main" class="$class">
@@ -455,10 +486,9 @@ inout;
      */
     public function form($currentValues,$definition=null,$messages=[],$class='form-control',$subclass='') {
         $this->html[]=(new FormOne($currentValues,$definition,$messages))->setClass($class)->setSubClass($subclass);
-        if ($this->hasPost==false) {
-
+        if ($this->hasPost===false) {
             if ($this->csrf) {
-                @$_SESSION['_csrf']=uniqid();
+                @$_SESSION['_csrf']=uniqid('',true);
                 $this->html[] = "<input type='hidden' name='_csrf' value='".@$_SESSION['_csrf']."'/>";
             }
             $this->hasPost=true;
@@ -471,8 +501,10 @@ inout;
     }
 
     public function checkCSRF() {
-        if (!$this->csrf) return true;
-        return @$_SESSION['_csrf']==@$_POST['_csrf'];
+        if (!$this->csrf) {
+            return true;
+        }
+        return @$_SESSION['_csrf']===@$_POST['_csrf'];
     }
 
     /**
@@ -498,7 +530,7 @@ inout;
         }
         $this->html[]=$buttons; // $this::genNode('button',$buttons);
         if ($formAligned) {
-            $this->rawHtml("</div></div>");
+            $this->rawHtml('</div></div>');
         }
         return $this;
     }
@@ -634,16 +666,16 @@ inout;
     public function render($return=false) {
 
         $co=count($this->html);
-        $html="";
+        $html= '';
         for($i=0;$i<$co;$i++) {
             $html.=$this->renderItem($i);
         }
         if ($return) {
             return $html;
-        } else {
-            echo $html;
-            return null;
         }
+
+        echo $html;
+        return null;
     }
 
     /**

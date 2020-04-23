@@ -3,8 +3,6 @@
 namespace eftec\DashOne\controls;
 
 
-use eftec\DashOne\DashOne;
-
 /**
  * Class ContainerOne
  * @package eftec\DashOne\controls
@@ -15,7 +13,7 @@ use eftec\DashOne\DashOne;
  */
 class ContainerOne extends ControlOne
 {
-	var $html;
+	public $html;
 	
 	/**
 	 * ContainerOne constructor.
@@ -33,11 +31,10 @@ class ContainerOne extends ControlOne
 	 * @param $subobject
 	 * @param null $caller
 	 * @return mixed
-	 */
+     * @noinspection PhpUnusedParameterInspection
+     */
 	public function render($subobject,$caller=null) {
-		$html=str_replace('%control',$subobject,$this->html);
-		$html=str_replace('%extra',$this->extra,$html);
-		return $html;
+        return str_replace(array('%control', '%extra'), array($subobject, $this->extra), $this->html);
 	}
 
 }

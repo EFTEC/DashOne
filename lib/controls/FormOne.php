@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection TypeUnsafeComparisonInspection */
 
 namespace eftec\DashOne\controls;
 
@@ -13,9 +13,9 @@ namespace eftec\DashOne\controls;
  */
 class FormOne extends ControlOne
 {
-	var $currentValues;
-	var $definition;
-	var $messages;
+	public $currentValues;
+	public $definition;
+	public $messages;
 
 	/**
 	 * FormOne constructor.
@@ -25,11 +25,11 @@ class FormOne extends ControlOne
 	 */
 	public function __construct($currentValues, $definition=null, $messages=[])
 	{
-		if ($definition==null) {
+		if ($definition===null) {
 			$definition=$currentValues;
-			foreach($definition as &$v) {
+			foreach($definition as $k=>$v) {
 				if(!is_array($v)) {
-					$v='text'; // by default, types are array 
+                    $definition[$k]='text'; // by default, types are array 
 				}
 			}
 		}
@@ -39,8 +39,9 @@ class FormOne extends ControlOne
 	}
 
 
-	public function render($caller=null) {
-		$html="";
+    /** @noinspection PhpUnusedParameterInspection */
+    public function render($caller=null) {
+		$html= '';
 		foreach($this->definition as $key=>$defType) {
 			$cv=@$this->currentValues[$key];
 			switch ($defType) {
@@ -54,7 +55,7 @@ class FormOne extends ControlOne
 					$html .= "<label for='$key' class='col-sm-2 col-form-label'>$key</label>\n";
 					$html .= "<div class='col-sm-10'>\n";
 					$html.="<textarea class='{$this->class} summernote' id='$key' name='$key' >".htmlentities($cv,ENT_QUOTES)."</textarea>\n";
-					$html .= "<em class='{$this->subclass}'>" . @$this->messages[$key] . "</em>";
+					$html .= "<em class='{$this->subclass}'>" . @$this->messages[$key] . '</em>';
 					$html .= "</div>\n";
 					$html .= "</div>\n";					
 					break;						
@@ -73,12 +74,12 @@ class FormOne extends ControlOne
 								$html .= "<option value='$k'>$v</option>\n";
 							}
 						}
-						$html .= "</select>";
+						$html .= '</select>';
 					} else {
 						// textbox
 						$html .= "<input type='$defType' class='{$this->class}' id='$key' name='$key'  value='" . htmlentities($cv,ENT_QUOTES) . "' />";
 					}
-					$html .= "<em class='{$this->subclass}'>" . @$this->messages[$key] . "</em>";
+					$html .= "<em class='{$this->subclass}'>" . @$this->messages[$key] . '</em>';
 					$html .= "</div>\n";
 					$html .= "</div>\n";					
 					break;

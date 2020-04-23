@@ -26,9 +26,9 @@ class TableOne extends ControlOne
 	 */
 	public function __construct($values=[],$definition=null)
 	{
-		if ($definition==null) {
+		if ($definition===null) {
 		    $first=reset($values);
-			if (isset($first)) {
+			if (isset($first) && $first!==false) {
 				$definition = array_keys($first);
 			}
 			/*
@@ -79,7 +79,7 @@ class TableOne extends ControlOne
 						if ($caller === null) {
 							$html .= "<td>-array-</td>\n";
 						} else {
-							$html .= "<td>" . $caller->renderItem($cell) . "</td>\n";
+							$html .= '<td>' . $caller->renderItem($cell) . "</td>\n";
 						}
 					} else {
 						$html .= "<td>$cell</td>\n";
@@ -89,7 +89,7 @@ class TableOne extends ControlOne
 			}
 		}
 		$html.="</tbody>\n";
-		$html.="</table>";
+		$html.= '</table>';
 		return $html;
 	
 	}

@@ -13,9 +13,9 @@ namespace eftec\DashOne\controls;
 class ButtonOne extends ControlOne
 {
 	
-	var $label;
+	public $label;
 	/** @var string=['submit','button','link'][$i]  */
-	var $type;
+	public $type;
 
 	/**
 	 * ButtonOne constructor.
@@ -37,7 +37,7 @@ class ButtonOne extends ControlOne
 	}
 	
 	public function render() {
-		if ($this->type=='link') {
+		if ($this->type === 'link') {
 			$html="<a class='{$this->class}' href='{$this->name}' {$this->extra}>{$this->label}</a>&nbsp;\n";
 		} else {
 			$html="<button type='{$this->type}' value='{$this->name}' class='{$this->class}' id='{$this->name}' name='{$this->name}' {$this->extra}>{$this->label}</button>&nbsp;\n";

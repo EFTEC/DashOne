@@ -12,17 +12,17 @@ namespace eftec\DashOne\controls;
  */
 class ImageOne extends ControlOne
 {
-	var $url;
-	var $title;
+	public $url;
+	public $title;
 
 	/**
 	 * ImageOne constructor.
-	 * @param $url
-	 * @param $title
+	 * @param string $url
+	 * @param string $title
 	 */
 	public function __construct($url, $title=null)
 	{
-		$title=($title==null)?$url:$title;
+		$title=($title===null)?$url:$title;
 		$this->url = $url;
 		$this->title = $title;
 	}

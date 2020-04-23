@@ -2,7 +2,7 @@
   "name": "eftec/dashone",
   "description": "A fast UI Dashboard generator for PHP",
   "type": "library",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "keywords": ["blade","template","view","php","templating"],
   "homepage": "https://github.com/EFTEC/DashOne",
   "license": "LGPL-3.0-or-later",

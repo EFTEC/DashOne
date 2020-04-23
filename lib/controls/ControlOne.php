@@ -12,10 +12,10 @@ namespace eftec\DashOne\controls;
  */
 abstract class ControlOne
 {
-	var $name='';
-	var $class='';
-	var $extra='';
-	var $subclass='';
+	public $name='';
+	public $class='';
+	public $extra='';
+	public $subclass='';
 
 	/**
 	 * Subclass is the class of the inner element, for example the class of "li" inside the "ul"

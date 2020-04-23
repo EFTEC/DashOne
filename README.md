@@ -210,7 +210,7 @@ $currentValue=['IdProduct'=>"2"
 	,'Description'=>''];
 
 $dash->form($currentValue) // it's macro of new FormOne()
-``` 
+```
 
 ![doc/screenshotform0.jpg](doc/screenshotform0.jpg)
 
@@ -229,7 +229,7 @@ $currentValue=['IdProduct'=>"2"
 	,'Description'=>''];
 
 $dash->form($currentValue,$definition) // it's macro of new FormOne()
-``` 
+```
 
 ![doc/screenshotform.jpg](doc/screenshotform.jpg)
 
@@ -279,7 +279,7 @@ $values=
 	];
 
 $dash->table($values)->...  // it must be called after the render
-```    
+```
 
 ![doc/screenshottable.jpg](doc/screenshottable.jpg)
 
@@ -305,7 +305,7 @@ $dash->render();
 
 ### An empty dashboard:
 
- 
+
 ```php
 $dash=new DashOne();
 
@@ -322,9 +322,81 @@ $dash->footer();
 $dash->render();
 ```
 
+### Login Page
 
+[examples/testlogin.php](examples/testlogin.php)
+
+![doc/login.jpg](doc/login.jpg)
+
+The library has a build-in login page.  The session is stored in the next variable
+
+```php
+$_SESSION['user'];
+```
+
+#### Step 1 Initialize Login Page
+
+To create a login page, you must initialize in the constructor as follow
+
+Using an array (user and password)
+
+```php
+$dash=new DashOne(false,false,'salt_123',['user'=>'john','password'=>'doe']);
+```
+
+Or using a method
+
+```php
+$validateLogin= function($user) {
+    // this method could access to the database
+    return $user['username'] === 'john' && $user['password'] === 'doe';
+};
+$dash=new DashOne(false,false,'salt_123',$validateLogin);
+```
+
+#### Step 2 Fetch values
+
+```php
+$user=[];
+$dash->fetchLogin($user);
+```
+
+#### Step 3 Redirect if the user has sign-in correctly
+
+```php
+if($user['result']) {
+    header('location:testlogin2.php');
+    die(1);
+} else {
+    $message='user or password incorrect';
+}
+```
+
+#### Step 4 Display Login Screen
+
+```php
+$dash->head('Example - test 1','',true)
+    ->login($user,null,'Sign-In')
+        ->alert($message)
+        ->footer()
+    ->endLogin()
+->render();
+```
+
+#### Step 5 CSRF protection
+
+It is possible to add an extra layer of protection by adding the next line
+
+```php
+if (!$dash->checkCSRF()) {
+    die(1);
+}
+```
 
 ## Version
+
+* 1.6.2 2020-04-23   
+    * Fix: cleanups.   
 * 1.6.1 2020-03-03
     * Fix: TableOne now allows non-base zero array
 * 1.6 2020-18-01

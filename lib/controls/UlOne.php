@@ -4,6 +4,7 @@ namespace eftec\DashOne\controls;
 
 
 use eftec\DashOne\DashOne;
+use Exception;
 
 /**
  * Class UlOne
@@ -15,7 +16,7 @@ use eftec\DashOne\DashOne;
  */
 class UlOne extends ControlOne
 {
-	var $values;
+	public $values;
 
 	/**
 	 * TableOne constructor.
@@ -29,14 +30,14 @@ class UlOne extends ControlOne
 	/**
 	 * @param DashOne|null $caller
 	 * @return string
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function render($caller=null) {
 		$html="<ul class='{$this->class}'>{$this->extra}";
 		foreach($this->values as $line) {
 			$html.="<li class='{$this->subclass}'>".$caller->renderItem($line)."</li>\n";
 		}
-		$html.="</ul>";
+		$html.= '</ul>';
 		return $html;
 	}
 
