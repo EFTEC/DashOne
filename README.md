@@ -430,6 +430,8 @@ if (isset($_SESSION['user']) ) {
 
 ## Version
 
+* 1.7 2020-04-23
+    * Added .gitattribute Examples and doc are not pushed via composer (it should reduce the size)
 * 1.6.2 2020-04-23   
     * Fix: cleanups.   
 * 1.6.1 2020-03-03

@@ -21,7 +21,7 @@ use Exception;
  * @package eftec\DashOne
  * @license lgplv3
  * @author   Jorge Patricio Castro Castillo <jcastro arroba eftec dot cl>
- * @version 1.6.2 2020-04-23
+ * @version 1.7 2020-04-23
  * @link https://github.com/EFTEC/DashOne
  */
 class DashOne {
