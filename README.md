@@ -328,11 +328,22 @@ $dash->render();
 
 ![doc/login.jpg](doc/login.jpg)
 
-The library has a build-in login page.  The session is stored in the next variable
+The library has a build-in login page that it relies on PHP's session variable.
+
+To use a the function, the session must be enabled
+
+```php
+@session_start(); // or via php.ini
+```
+
+And we could read the current session as follow:
 
 ```php
 $_SESSION['user'];
+// array(5) { ["username"]=> "" ["password"]=> "" ["remember"]=> "" ["_csrf"]=>  "" ["result"]=> bool(true) }
 ```
+
+
 
 #### Step 1 Initialize Login Page
 
@@ -341,7 +352,7 @@ To create a login page, you must initialize in the constructor as follow
 Using an array (user and password)
 
 ```php
-$dash=new DashOne(false,false,'salt_123',['user'=>'john','password'=>'doe']);
+$dash=new DashOne(false,true,'salt_123',['user'=>'john','password'=>'doe']);
 ```
 
 Or using a method
@@ -358,13 +369,14 @@ $dash=new DashOne(false,false,'salt_123',$validateLogin);
 
 ```php
 $user=[];
-$dash->fetchLogin($user);
+$dash->fetchLogin($user); // user could returns [ ["username"]=> "" ["password"]=> "" ["remember"]=> "" ["_csrf"]=>  "" ["result"]=> bool(true) ]
 ```
 
 #### Step 3 Redirect if the user has sign-in correctly
 
 ```php
 if($user['result']) {
+    @session_write_close();
     header('location:testlogin2.php');
     die(1);
 } else {
@@ -375,15 +387,24 @@ if($user['result']) {
 #### Step 4 Display Login Screen
 
 ```php
-$dash->head('Example - test 1','',true)
-    ->login($user,null,'Sign-In')
-        ->alert($message)
-        ->footer()
-    ->endLogin()
+$dash->head('Example - test 1','',true) // title of the page, extra content in the header and true= for login page
+    ->login($user,null,'Sign-In') // user variable, null or link to the login image and title of the login page
+        ->alert($message) // (optional) shows an alert inside the login page
+        ->footer() // (optional) shows a footer inside the login
+    ->endLogin() // end login container
 ->render();
 ```
 
-#### Step 5 CSRF protection
+#### Step 5 Log out
+
+The validation of the user is keep in the session. So to close a session we could destroy the session or unsetting the session.
+
+```php
+session_destroy();
+unset($_SESSION['user']);
+```
+
+#### Step 6 CSRF protection (optional)
 
 It is possible to add an extra layer of protection by adding the next line
 
@@ -392,6 +413,20 @@ if (!$dash->checkCSRF()) {
     die(1);
 }
 ```
+
+#### Step 7 Validating the session
+
+It is possible to validate the session 
+
+```php
+if (isset($_SESSION['user']) ) {
+	// user has sign-in
+} else {
+    // user hasn't sign-in
+}
+```
+
+
 
 ## Version
 
